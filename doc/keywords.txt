@@ -1,0 +1,55 @@
+# -> '#' is used for comments
+# one per line
+
+Resolved at test loading:
+
+package_name("$NAME_OF_PACKAGE") 
+ - used to describe the name of the test unit
+ - all tests from this test unit will be referenced using 
+ - quotes are optional
+
+begin_main_test()
+ - used as entry point for the package
+ - this test should reference other tests
+
+begin_test("$TEST_NAME")
+ - starts definition of a test composed of multiple actions
+ - test name should be unqiue within the package
+
+end_test()
+ - ends current test declaration
+
+include("$PATH_TO_TEST_FILE")
+ - similar to C / C++ header includes, it is used to reference other test files
+ - path can be both relative and absolute
+ - relativity is to the file referencing the include
+
+use_package("$PACKAGE_NAME")
+ - hint regarding what packages will be used inside this test definition
+ - current package is the default package that will be used
+
+use_plugin_grammar("$GRAMMAR_NAME")
+ - hint regarding what plugin grammars will be used inside the definitions from this test module
+
+
+Resolved at compile time:
+
+run_test($PACKAGE_NAME.$TEST_NAME)
+ - runs a test that can be found inside the include tree
+ - $PACKAGE_NAME is the package where the test is defined
+ - if no $PACKAGE_NAME is provided current test unit will be looked up
+
+cmd($GRAMMAR_NAME::$COMMAND,"$PARAMETERS")
+ - runs a command from the grammar named $GRAMMAR_NAME
+ - $PARAMETERS are the parameters forwarded to the command
+
+expect_event($GRAMMAR_NAME::$EVENT,$TIMEOUT_MS,"$VALID_STRING")
+ - begins watching for the event $EVENT 
+ - the event $EVENT will be considered valid only if it contains the substring $VALID_STRING
+ - recommended to start watching before calling the command which generates the event to avoid cornercases
+ - the event will timeout after $TIMEOUT_MS miliseconds or never if the given timeout is -1
+ - any event timeout will be treated as a failed test
+ - does not block tests execution
+
+run_cmd_and_wait_event($GRAMMAR_NAME::$CMD,"$CMD_PARAMETERS",$GRAMMAR_NAME::$EVT,"$VALID_STRING",$TIMEOUT_MS)
+ - TBD
